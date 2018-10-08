@@ -14,10 +14,10 @@ import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
 import util.Conf;
+import util.License;
 
 public class SAMgr {
-	private static final Logger LOG = LogManager
-			.getLogger(SAMgr.class);
+	private static final Logger LOG = LogManager.getLogger(SAMgr.class);
 
 	public static void printSQLException(SQLException e) {
 		while (e != null) {
@@ -28,6 +28,7 @@ public class SAMgr {
 			e = e.getNextException();
 		}
 	}
+
 	public static void main(String[] args) {
 
 		DateTime start = new DateTime();
@@ -38,12 +39,18 @@ public class SAMgr {
 			LOG.error("there is no config.xml as a args[0]");
 			System.exit(0);
 		}
+		License lic = new License();
+		if (lic.isValid(cf.getSingleString("lic_key_file"))) {
+			LOG.info("license confirmed");
+		} else {
+			if (cf.getSingleString("force_mode").matches("dev")) {
+				LOG.info("develop mode. license check waived");
+			} else {
+				LOG.fatal("license is not valid");
+				System.exit(0);
+			}
+		}
 
-		
-		
-		
-		
-		
 		String rdbUrl = cf.getDbURL();
 		String rdbUser = cf.getSingleString("user");
 		String rdbPasswd = cf.getSingleString("password");
