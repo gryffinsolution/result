@@ -201,7 +201,8 @@ public class RDao {
 		try {
 			String sql = "SELECT DISTINCT HOST FROM SA_RESULT SR,HOST_INFOS HI"
 					+ " WHERE SR.HOST=HI.HOSTNAME AND SR.STATUS ='SENT' "
-					+ " AND SUBMIT_TS > SYSDATE -1/24 AND HI.STATUS ='up' ";
+					+ " AND SUBMIT_TS > SYSDATE -1/24 AND HI.STATUS ='up' "
+					+ " AND ( IS_V3 IS NULL OR IS_V3 = 0) ";
 			int i = 0;
 			LOG.info(sql);
 			stmt = con.createStatement();
